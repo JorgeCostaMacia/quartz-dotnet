@@ -9,9 +9,8 @@ namespace JorgeCostaMacia.Quartz.Serilog.Infrastructure;
 /// <summary>
 /// Quartz trigger listener that logs every trigger transition with a <b>fixed, low-cardinality
 /// message</b> (<c>TriggerFired</c> / <c>VetoJobExecution</c> / <c>TriggerMisfired</c> /
-/// <c>TriggerRetriesExhausted</c> / <c>TriggerComplete</c>) and pushes everything variable — scheduler, job, trigger,
-/// data, times and
-/// the <see cref="JobTrace"/> identifiers — through the Serilog log context.
+/// <c>TriggerRetriesExhausted</c> / <c>TriggerComplete</c>) and pushes everything variable — scheduler,
+/// job, trigger, data, times and the <see cref="JobTrace"/> identifiers — through the Serilog log context.
 /// </summary>
 /// <remarks>
 /// <para>

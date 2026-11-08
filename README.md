@@ -22,7 +22,7 @@ The **.NET 10** SDK.
 
 | Package | What it does |
 | --- | --- |
-| [JorgeCostaMacia.Quartz](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/) | `JobTrace` — idempotent AggregateId/CorrelationId correlation on the Quartz execution context — plus `WithPostgresDefaults()`, the clustered Postgres store every host repeats, and `WithDefaults()` for its execution history and its hosted scheduler. |
+| [JorgeCostaMacia.Quartz](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/) | `JobTrace` — idempotent AggregateId/CorrelationId correlation on the Quartz execution context — plus `WithPostgresDefaults()`, a clustered Postgres store configuration, and `WithDefaults()` for its execution history and its hosted scheduler. |
 | [JorgeCostaMacia.Quartz.Serilog](https://www.nuget.org/packages/JorgeCostaMacia.Quartz.Serilog/) | Quartz job/trigger log listeners — fixed low-cardinality messages, everything variable in the log context. |
 
 ## Contact

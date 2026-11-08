@@ -1,6 +1,6 @@
 # quartz-dotnet — working in this repo
 
-Extensions for Quartz.NET — job-execution trace correlation, the clustered Postgres store with its execution history and hosted-scheduler defaults, and Serilog job and trigger listeners — each scoped to a single concern and shipped independently on NuGet under `JorgeCostaMacia.Quartz.*`. Moved out of **shared-net** in 10.2.0, keeping the package ids and the version line. An independent project, not affiliated with Quartz.NET: the README says so, and the repo name must never read as the scheduler itself.
+Extensions for Quartz.NET — job-execution trace correlation, the clustered Postgres store with its execution history and hosted-scheduler defaults, and Serilog job and trigger listeners — each scoped to a single concern and shipped independently on NuGet under `JorgeCostaMacia.Quartz.*`. Moved out of **shared-net** with the 10.2 versions, keeping the package ids and the version line. An independent project, not affiliated with Quartz.NET: the README says so, and the repo name must never read as the scheduler itself.
 
 ## Layout
 

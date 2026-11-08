@@ -32,7 +32,7 @@ services
 ```
 
 - **`JobsLoggerListener`** — `JobToBeExecuted` (Information), `JobExecutionVetoed` (Warning), `JobWasExecuted` (Information, or **Error with the root cause attached** when the job threw).
-- **`TriggerLoggerListener`** — `TriggerFired` / `TriggerComplete` (Information, with the scheduler's resulting instruction), `VetoJobExecution` (Information, never vetoes), `TriggerMisfired` (**Error** — the trigger missed its scheduled time).
+- **`TriggerLoggerListener`** — `TriggerFired` / `TriggerComplete` (Information, with the scheduler's resulting instruction), `VetoJobExecution` (Information, never vetoes), `TriggerMisfired` (**Error** — the trigger missed its scheduled time), `TriggerRetriesExhausted` (**Warning, with the root cause attached** — a trigger with a retry policy gave up on a failed firing; the failure itself was already logged by `JobWasExecuted`).
 - Every event carries `AggregateId`/`CorrelationId` from [`JobTrace`](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/) — idempotent get-or-create on the firing's own data map, so your own listeners (e.g. event publishers) read the same pair with `JobTrace.GetOrCreate(context)`, in any order.
 
 ## Requirements

@@ -8,7 +8,7 @@ namespace JorgeCostaMacia.Quartz.Infrastructure;
 /// <remarks>
 /// Kept as an <see cref="IQuartzBuilder"/> extension (not a hidden <c>Add…</c> facade) so the host's own
 /// <c>AddQuartz</c> call stays visible in its <c>Program</c> while the policy lives here — the same shape
-/// as http-net's options extensions.
+/// as http-dotnet's options extensions.
 /// </remarks>
 public static class QuartzBuilderExtensions
 {

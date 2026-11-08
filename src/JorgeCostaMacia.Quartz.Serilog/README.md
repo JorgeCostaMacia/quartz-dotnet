@@ -43,7 +43,7 @@ Depends on [JorgeCostaMacia.Quartz](https://www.nuget.org/packages/JorgeCostaMac
 
 ## About
 
-`JorgeCostaMacia.Quartz.Serilog` is part of **[quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)** — extensions for Quartz.NET: job-execution trace correlation, the clustered Postgres store and its defaults, and Serilog job and trigger listeners, each package scoped to a single concern. An independent project, not affiliated with Quartz.NET.
+`JorgeCostaMacia.Quartz.Serilog` is part of **[quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)** — extensions for Quartz.NET: job-execution trace correlation, the clustered Postgres store and its defaults, and Serilog job and trigger listeners, each package scoped to a single concern. An independent project, not affiliated with Quartz.NET or Serilog: these listeners extend Quartz through its listener interfaces and write through Serilog's public API.
 
 - **Repository:** [github.com/JorgeCostaMacia/quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)
 - **Issues & requests:** [open an issue](https://github.com/JorgeCostaMacia/quartz-dotnet/issues)

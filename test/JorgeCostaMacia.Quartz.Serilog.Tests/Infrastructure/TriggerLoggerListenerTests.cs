@@ -64,6 +64,8 @@ public class TriggerLoggerListenerTests
         Assert.Equal(LogEventLevel.Error, logEvent.Level);
         Assert.Equal("\"trigger-1\"", logEvent.Properties["Trigger"].ToString());
         Assert.Equal("\"job-1\"", logEvent.Properties["Job"].ToString());
+        // which scheduler missed it, from the scheduler Quartz passes in
+        Assert.Equal($"\"{context.Scheduler.SchedulerName}\"", logEvent.Properties["Scheduler"].ToString());
         // freshly minted — a misfire has no execution context
         Assert.True(logEvent.Properties.ContainsKey("AggregateId"));
     }

@@ -76,7 +76,9 @@ public sealed class TriggerLoggerListener : ITriggerListener
 
     /// <summary>
     /// Logs <c>TriggerMisfired</c> at <see cref="LogLevel.Error"/> — the trigger missed its scheduled
-    /// fire time. There is no execution context here, so the trace identifiers are freshly minted.
+    /// fire time. There is no execution context here, so the trace identifiers are freshly minted, and the
+    /// scheduler, trigger, job and data come from the trigger and the scheduler Quartz passes in; the
+    /// times, fire identity and retry state belong to a firing that never happened, so they are absent.
     /// </summary>
     /// <param name="trigger">The misfired trigger.</param>
     /// <param name="scheduler">The scheduler the trigger belongs to.</param>
@@ -92,6 +94,7 @@ public sealed class TriggerLoggerListener : ITriggerListener
         using (LogContext.Push(
             new PropertyEnricher("AggregateId", trace.AggregateId),
             new PropertyEnricher("CorrelationId", trace.CorrelationId),
+            new PropertyEnricher("Scheduler", scheduler.SchedulerName),
             new PropertyEnricher("Trigger", trigger.Key.Name),
             new PropertyEnricher("TriggerGroup", trigger.Key.Group),
             new PropertyEnricher("Job", trigger.JobKey.Name),

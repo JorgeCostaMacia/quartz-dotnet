@@ -42,7 +42,7 @@ public sealed class QuartzBuilderExtensionsIntegrationTests
     // The dot appended to the schema is what makes the store read quartz.TRIGGERS rather than the
     // QRTZ_TRIGGERS of Quartz's own default, and the options are only materialized once it connects.
     [Fact]
-    public async Task WithPostgresDefaults_AppendsTheDotToTheSchemaAndStoresJobDataAsStrings()
+    public async Task WithPostgresDefaults_WithASchemaWithoutADot_AppendsItAndStoresJobDataAsStrings()
     {
         ServiceProvider provider = Provider("orders-prefix");
 
@@ -58,7 +58,7 @@ public sealed class QuartzBuilderExtensionsIntegrationTests
     // What the store is for: a scheduled job survives in Postgres and comes back with its data. This is
     // also what StoreJobDataAsStrings changes, so it is the assertion that a deployment relies on.
     [Fact]
-    public async Task WithPostgresDefaults_PersistsAJobAndItsDataAcrossSchedulers()
+    public async Task WithPostgresDefaults_OnASharedStore_PersistsAJobAndItsDataAcrossSchedulers()
     {
         IScheduler first = await Provider("orders-persist").GetRequiredService<ISchedulerFactory>()
             .GetScheduler(TestContext.Current.CancellationToken);
@@ -89,7 +89,7 @@ public sealed class QuartzBuilderExtensionsIntegrationTests
     }
 
     [Fact]
-    public async Task WithPostgresDefaults_KeepsTheExecutionHistoryInTheStore()
+    public async Task WithPostgresDefaults_OnTheAdoStore_TurnsTheExecutionHistoryOn()
     {
         ServiceProvider provider = Provider("orders-history-option");
 
@@ -101,7 +101,7 @@ public sealed class QuartzBuilderExtensionsIntegrationTests
     // The option alone could be on and still record nowhere; a job that runs and leaves its row in
     // EXECUTION_HISTORY is what a dashboard, or an operator with psql, will actually read.
     [Fact]
-    public async Task WithPostgresDefaults_RecordsAnExecutionInTheHistoryTable()
+    public async Task WithPostgresDefaults_AfterAJobRuns_RecordsItInTheHistoryTable()
     {
         const string instance = "orders-history-row";
         IScheduler scheduler = await Provider(instance).GetRequiredService<ISchedulerFactory>()

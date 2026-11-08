@@ -46,7 +46,7 @@ public sealed class JobsLoggerListenerTests
     }
 
     [Fact]
-    public async Task JobExecutionVetoed_LogsWarning()
+    public async Task JobExecutionVetoed_WhenATriggerListenerVetoes_LogsAWarning()
     {
         JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
@@ -91,7 +91,7 @@ public sealed class JobsLoggerListenerTests
     }
 
     [Fact]
-    public async Task Callbacks_ShareTheTraceAcrossTheExecution()
+    public async Task JobWasExecuted_AfterJobToBeExecutedOnTheSameExecution_LogsTheSameTrace()
     {
         // whoever observes the same execution reads the same identifiers — no ordering contract.
         JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);

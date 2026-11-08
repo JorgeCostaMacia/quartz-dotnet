@@ -44,7 +44,7 @@ public sealed class QuartzBuilderExtensionsTests
     // The identity the store rows carry: the instance name keeps two schedulers sharing a database apart,
     // and the instance id has to differ per replica or clustering fires a trigger twice.
     [Fact]
-    public void WithPostgresDefaults_NamesTheSchedulerAndIdentifiesTheInstance()
+    public void WithPostgresDefaults_WithAnInstanceName_NamesTheSchedulerAndUsesTheMachineAsInstanceId()
     {
         QuartzSchedulerOptions options = Provider(instance: "orders")
             .GetRequiredService<IOptions<QuartzSchedulerOptions>>().Value;
@@ -54,7 +54,7 @@ public sealed class QuartzBuilderExtensionsTests
     }
 
     [Fact]
-    public void WithPostgresDefaults_TakesTheInstanceNameGiven()
+    public void WithPostgresDefaults_WithAnotherInstanceName_TakesThatName()
     {
         QuartzSchedulerOptions options = Provider(instance: "dwh")
             .GetRequiredService<IOptions<QuartzSchedulerOptions>>().Value;
@@ -64,7 +64,7 @@ public sealed class QuartzBuilderExtensionsTests
 
     // How long the history is kept is the host's call: the store alone leaves Quartz's own bounds.
     [Fact]
-    public void WithPostgresDefaults_LeavesTheHistoryBoundsToTheHost()
+    public void WithPostgresDefaults_WithoutHistoryOptions_LeavesQuartzOwnBounds()
     {
         ExecutionHistoryOptions options = Provider()
             .GetRequiredService<IOptions<ExecutionHistoryOptions>>().Value;

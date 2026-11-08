@@ -52,12 +52,24 @@ Use the **`gitflow` skill** for any branch/release work — never improvise.
 
 ## Relevant skills
 
-- **`logging-net`** (with **`logging`**) — the logging style `Quartz.Serilog` implements: the message as a fixed name, every variable value through `LogContext`, correlation in every scope.
-- **`efcore-postgres-net`** — the Postgres store `WithPostgresDefaults` configures.
-- **`code-style-net`** — how the C# is written: explicit types, the 120-column width, naming, the gates.
-- **`build-net`** — the three-tier `Directory.Build.props`, the single `VersionPrefix`, CPM, the NuGet audit as a build gate, the packing metadata, and the `nuget.config` base.
-- **`testing-net`** (with **`testing`**) — xUnit v3 on Microsoft.Testing.Platform, the test project layout, Testcontainers fixtures.
+Skills that apply to this repo — let them trigger, or invoke explicitly. The first group is from `jorgecostamacia-agent-skills` (each `-net` skill brings the generic one it realizes); the rest from `dotnet-agent-skills` (the `dotnet/skills` marketplace).
+
+A skill listed here but missing on this machine is one command away: `claude plugin marketplace add JorgeCostaMacia/skills` (or `dotnet/skills`) once, then `claude plugin install <skill>@<marketplace>`.
+
+- **`logging-net`** (with **`logging`**) — the logging style `Quartz.Serilog` implements: fixed messages, every variable value through the log context, correlation in every scope — the `AggregateId`/`CorrelationId` pair `JobTrace` carries is that correlation.
+- **`bus-net`** — the main consumer of the store: the bus parks its retries in Quartz and a separate jobs worker runs them, on the store `WithPostgresDefaults` configures. A store change (a Quartz schema migration, a new column Quartz validates) reaches every worker that only parks retries too, since parking writes `triggers`.
+- **`clean-architecture-net`** (with **`clean-architecture`**) / **`solid`** — `AddSerilogContext()` as the package's `Add<Module>Context` composition root, internal by default with one public entry point, and design review of the public surface.
+- **`code-style-net`** — how the C# is written: explicit types, the 120-column width with declarations and constructions vertical, comments wrapped too, the gates.
+- **`build-net`** — the three-tier `Directory.Build.props`, the single `VersionPrefix`, CPM, the three-day package age, the NuGet audit as a build gate, the library's packing metadata, and the `nuget.config` base.
+- **`testing-net`** (with **`testing`**) — xUnit v3 on Microsoft.Testing.Platform, the test project layout, `TestContext.Current.CancellationToken`, the Testcontainers Postgres fixture and the in-memory scheduler harness.
 - **`gitflow`** — all branch/release work.
+- **`dotnet`** — C# language server + general .NET development.
+- **`dotnet-msbuild`** — `Directory.Build.props`, project-file quality, CPM.
+- **`dotnet-nuget`** — dependency management.
+- **`dotnet-test`** / **`dotnet-test-migration`** — tests; the xUnit v4 / MTP v2 setup.
+- **`dotnet-upgrade`** — target-framework migrations.
+
+Not relevant to this repo (skip): `ddd` / `ddd-net`, `validation-net` (no value objects, aggregates or FluentValidation here — `JobTrace` carries plain identifiers), `efcore-net` / `efcore-postgres-net` (the store is Quartz's own ADO.NET job store, not EF Core), `messaging` / `bus-kafka-net` (no messages here), `github-actions` / `github-actions-net` (the company's CI; this repo's runs on github-workflows), `dotnet-aspnetcore` (that's http-net), `dotnet-data`, `dotnet-ai`, `dotnet-maui`, `dotnet-blazor`, `dotnet-template-engine`, `dotnet11`, `dotnet-diag`, `dotnet-advanced`.
 
 ## Build & test
 

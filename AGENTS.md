@@ -1,6 +1,6 @@
 # quartz-dotnet — working in this repo
 
-Quartz.NET building blocks — job-execution trace correlation, the clustered Postgres store with its execution history and hosted-scheduler defaults, and Serilog job and trigger listeners — each scoped to a single concern and shipped independently on NuGet under `JorgeCostaMacia.Quartz.*`. Moved out of **shared-net** in 10.2.0, keeping the package ids and the version line.
+Extensions for Quartz.NET — job-execution trace correlation, the clustered Postgres store with its execution history and hosted-scheduler defaults, and Serilog job and trigger listeners — each scoped to a single concern and shipped independently on NuGet under `JorgeCostaMacia.Quartz.*`. Moved out of **shared-net** in 10.2.0, keeping the package ids and the version line. An independent project, not affiliated with Quartz.NET: the README says so, and the repo name must never read as the scheduler itself.
 
 ## Layout
 
@@ -22,6 +22,8 @@ Quartz.NET building blocks — job-execution trace correlation, the clustered Po
 ## Extend the framework's options, never replace its call
 
 A package that carries a policy publishes it as an **extension on the type the framework already hands the host** — `IQuartzBuilder.WithPostgresDefaults()`, `ExecutionHistoryOptions.WithDefaults()`, `QuartzHostedServiceOptions.WithDefaults()` — and never as an `Add…` method that wraps the framework's own. The host keeps writing `AddQuartz(…)`, so what it composes stays readable in its `ProgramBuilder`; only the policy moves here. `http-net` follows the same rule with its `ApiVersioningOptions` / `ProblemDetailsOptions` extensions, and its doc comments say so.
+
+`Quartz.Serilog`'s `AddSerilogContext()` is not such a facade: it registers the package's own two listeners and wraps no framework call — the host still writes `AddQuartz(…)` and attaches them there with `AddJobListener` / `AddTriggerListener`. It is the package's composition root, the `Add<Module>Context` of `clean-architecture-net`.
 
 ## Dependencies — Central Package Management
 

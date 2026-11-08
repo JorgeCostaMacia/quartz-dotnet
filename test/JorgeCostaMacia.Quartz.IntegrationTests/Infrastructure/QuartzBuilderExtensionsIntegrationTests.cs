@@ -14,7 +14,7 @@ namespace JorgeCostaMacia.Quartz.IntegrationTests.Infrastructure;
 /// connected, and a prefix pointing at tables that do not exist fails the start outright.
 /// </summary>
 [Collection(nameof(PostgreSqlCollection))]
-public class QuartzBuilderExtensionsIntegrationTests
+public sealed class QuartzBuilderExtensionsIntegrationTests
 {
     private readonly PostgreSqlFixture _postgres;
 

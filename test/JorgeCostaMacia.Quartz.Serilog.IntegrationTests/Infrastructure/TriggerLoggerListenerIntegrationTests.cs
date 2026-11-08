@@ -3,12 +3,12 @@ using Serilog.Events;
 
 namespace JorgeCostaMacia.Quartz.Serilog.IntegrationTests.Infrastructure;
 
-public class TriggerLoggerListenerIntegrationTests
+public sealed class TriggerLoggerListenerIntegrationTests
 {
     [Fact]
     public async Task Trigger_FiresAndCompletes_WithTheSchedulerInstructionAndNoNextFire()
     {
-        await using SchedulerHarness harness = await SchedulerHarness.StartAsync();
+        await using SchedulerHarness harness = await SchedulerHarness.StartAsync(TestContext.Current.CancellationToken);
 
         await harness.RunOnceAsync<DelayJob>(TestContext.Current.CancellationToken);
 

@@ -10,7 +10,7 @@ namespace JorgeCostaMacia.Quartz.Tests.Infrastructure;
 /// <see cref="IQuartzBuilder"/> extension rather than a one-call bootstrap, so the host keeps writing its
 /// own <c>AddQuartz</c> and the composition stays visible where it happens.
 /// </summary>
-public class QuartzBuilderExtensionsTests
+public sealed class QuartzBuilderExtensionsTests
 {
     private static ServiceProvider Provider(
         string instance = "orders",

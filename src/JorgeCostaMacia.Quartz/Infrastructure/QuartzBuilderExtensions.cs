@@ -54,8 +54,8 @@ public static class QuartzBuilderExtensions
     /// are <see cref="ExecutionHistoryOptionsExtensions.WithDefaults"/>, passed to
     /// <c>AddQuartzExecutionHistory</c>. The tables are part of the schema the scheduler validates on
     /// start: a store created before Quartz 4.4 needs Quartz's <c>database/migrations/4.2</c>, <c>4.3</c> and
-    /// <c>4.4</c> scripts first, and one created before 4.6 its <c>4.6</c> scripts; the start fails naming
-    /// whatever has not been run.
+    /// <c>4.4</c> scripts first, one created before 4.6 its <c>4.6</c> scripts, and one created before 4.7 its
+    /// <c>4.7</c> script; the start fails naming whatever has not been run.
     /// </para>
     /// </remarks>
     public static IQuartzBuilder WithPostgresDefaults(

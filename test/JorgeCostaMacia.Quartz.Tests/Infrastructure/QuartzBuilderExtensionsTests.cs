@@ -56,10 +56,10 @@ public sealed class QuartzBuilderExtensionsTests
     [Fact]
     public void WithPostgresDefaults_WithAnotherInstanceName_TakesThatName()
     {
-        QuartzSchedulerOptions options = Provider(instance: "dwh")
+        QuartzSchedulerOptions options = Provider(instance: "billing")
             .GetRequiredService<IOptions<QuartzSchedulerOptions>>().Value;
 
-        Assert.Equal("dwh", options.InstanceName);
+        Assert.Equal("billing", options.InstanceName);
     }
 
     // How long the history is kept is the host's call: the store alone leaves Quartz's own bounds.

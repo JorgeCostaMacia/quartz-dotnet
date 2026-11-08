@@ -1,0 +1,24 @@
+<Project>
+
+	<!-- Central Package Management: all third-party package versions live here, in one place.
+	     Inter-package JorgeCostaMacia.* deps are ProjectReferences (lockstep versioning); pack
+	     emits them as nuspec <dependency> at the shared version, so CPM doesn't manage them. -->
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.14" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.14" />
+		<PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
+		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.403" />
+		<PackageVersion Include="Npgsql" Version="10.0.3" />
+		<PackageVersion Include="Quartz" Version="4.6.2" />
+		<PackageVersion Include="Serilog" Version="4.4.0" />
+		<PackageVersion Include="Serilog.Extensions.Logging" Version="10.0.0" />
+		<PackageVersion Include="Testcontainers.PostgreSql" Version="4.16.0" />
+		<PackageVersion Include="xunit.v3" Version="4.0.2" />
+	</ItemGroup>
+
+</Project>

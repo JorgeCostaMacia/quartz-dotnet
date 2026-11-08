@@ -1,0 +1,121 @@
+using JorgeCostaMacia.Quartz.Serilog.Infrastructure;
+using JorgeCostaMacia.Quartz.Serilog.Tests.Fakes;
+using Microsoft.Extensions.Logging;
+using Quartz;
+using Serilog;
+using Serilog.Events;
+using Serilog.Extensions.Logging;
+
+namespace JorgeCostaMacia.Quartz.Serilog.Tests.Infrastructure;
+
+public class TriggerLoggerListenerTests
+{
+    private readonly CapturingSink _sink = new CapturingSink();
+
+    private TriggerLoggerListener Listener()
+        => new TriggerLoggerListener(
+            new SerilogLoggerFactory(
+                new LoggerConfiguration()
+                    .MinimumLevel.Verbose()
+                    .Enrich.FromLogContext()
+                    .WriteTo.Sink(_sink)
+                    .CreateLogger())
+                .CreateLogger<TriggerLoggerListener>());
+
+    [Fact]
+    public async Task TriggerFired_LogsInformation_WithFixedMessageAndContext()
+    {
+        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+
+        await Listener().TriggerFired(context.Trigger, context, TestContext.Current.CancellationToken);
+
+        LogEvent logEvent = Assert.Single(_sink.Events);
+        Assert.Equal("TriggerFired", logEvent.MessageTemplate.Text);
+        Assert.Equal(LogEventLevel.Information, logEvent.Level);
+        Assert.Equal("\"trigger-1\"", logEvent.Properties["Trigger"].ToString());
+        Assert.True(logEvent.Properties.ContainsKey("AggregateId"));
+    }
+
+    [Fact]
+    public async Task VetoJobExecution_NeverVetoes_AndLogsInformation()
+    {
+        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+
+        bool vetoed = await Listener().VetoJobExecution(
+            context.Trigger,
+            context,
+            TestContext.Current.CancellationToken);
+
+        Assert.False(vetoed);
+        LogEvent logEvent = Assert.Single(_sink.Events);
+        Assert.Equal("VetoJobExecution", logEvent.MessageTemplate.Text);
+        Assert.Equal(LogEventLevel.Information, logEvent.Level);
+    }
+
+    [Fact]
+    public async Task TriggerMisfired_LogsError_WithFreshTrace()
+    {
+        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+
+        await Listener().TriggerMisfired(context.Trigger, context.Scheduler, TestContext.Current.CancellationToken);
+
+        LogEvent logEvent = Assert.Single(_sink.Events);
+        Assert.Equal("TriggerMisfired", logEvent.MessageTemplate.Text);
+        Assert.Equal(LogEventLevel.Error, logEvent.Level);
+        Assert.Equal("\"trigger-1\"", logEvent.Properties["Trigger"].ToString());
+        Assert.Equal("\"job-1\"", logEvent.Properties["Job"].ToString());
+        // freshly minted — a misfire has no execution context
+        Assert.True(logEvent.Properties.ContainsKey("AggregateId"));
+    }
+
+    [Fact]
+    public async Task TriggerComplete_LogsInformation_WithTheSchedulerInstruction()
+    {
+        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+
+        await Listener().TriggerComplete(
+            context.Trigger,
+            context,
+            SchedulerInstruction.NoInstruction,
+            TestContext.Current.CancellationToken);
+
+        LogEvent logEvent = Assert.Single(_sink.Events);
+        Assert.Equal("TriggerComplete", logEvent.MessageTemplate.Text);
+        Assert.Equal(LogEventLevel.Information, logEvent.Level);
+        Assert.True(logEvent.Properties.ContainsKey("TriggerResult"));
+    }
+    // A warning, not an error: the failure was the job listener's error already, and this one only says
+    // no further attempt is coming. The root cause rides along, not the JobExecutionException wrapper.
+    [Fact]
+    public async Task TriggerRetriesExhausted_LogsWarning_WithTheRootCause()
+    {
+        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        InvalidOperationException cause = new InvalidOperationException("the broker is down");
+
+        await Listener().TriggerRetriesExhausted(
+            context.Trigger,
+            context,
+            new JobExecutionException(cause),
+            TestContext.Current.CancellationToken);
+
+        LogEvent logEvent = Assert.Single(_sink.Events);
+        Assert.Equal("TriggerRetriesExhausted", logEvent.MessageTemplate.Text);
+        Assert.Equal(LogEventLevel.Warning, logEvent.Level);
+        Assert.Same(cause, logEvent.Exception);
+        Assert.Equal("\"trigger-1\"", logEvent.Properties["Trigger"].ToString());
+    }
+
+    // The other side of the two ?. guards: Quartz leaves ScheduledFireTimeUtc empty on a manual
+    // trigger and NextFireTimeUtc empty on a one-shot, so both have to log as null rather than throw.
+    [Fact]
+    public async Task TriggerFired_WithTheTimestampsFlipped_LogsThemAsTheyCome()
+    {
+        JobExecutionContextFake flipped = (await JobExecutionContextFake.Create()).WithFlippedTimestamps();
+
+        await Listener().TriggerFired(flipped.Trigger, flipped, TestContext.Current.CancellationToken);
+
+        LogEvent logEvent = Assert.Single(_sink.Events);
+        Assert.Null(((ScalarValue)logEvent.Properties["ScheduleTime"]).Value);
+        Assert.NotNull(((ScalarValue)logEvent.Properties["NextFireTime"]).Value);
+    }
+}

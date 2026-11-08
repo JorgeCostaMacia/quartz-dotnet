@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/JorgeCostaMacia.Quartz/JorgeCostaMacia.Quartz.csproj" />
+  <Project Path="src/JorgeCostaMacia.Quartz.Serilog/JorgeCostaMacia.Quartz.Serilog.csproj" />
+  <Project Path="test/JorgeCostaMacia.Quartz.Tests/JorgeCostaMacia.Quartz.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Quartz.IntegrationTests/JorgeCostaMacia.Quartz.IntegrationTests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Quartz.Serilog.Tests/JorgeCostaMacia.Quartz.Serilog.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Quartz.Serilog.IntegrationTests/JorgeCostaMacia.Quartz.Serilog.IntegrationTests.csproj" />
+</Solution>

@@ -1,0 +1,90 @@
+# JorgeCostaMacia.Quartz
+
+Quartz job-execution **trace correlation**: `JobTrace` get-or-creates the `AggregateId`/`CorrelationId` pair on the execution context, so every observer of the same execution — log listeners, event publishers, the job itself — shares the same identifiers **regardless of who runs first**.
+
+And the **clustered Postgres store** every host in the family repeats, as one `IQuartzBuilder` extension, with its **execution history** bounds and its **hosted scheduler** as two more, on `ExecutionHistoryOptions` and `QuartzHostedServiceOptions`.
+
+[![NuGet](https://img.shields.io/nuget/v/JorgeCostaMacia.Quartz.svg)](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/)
+[![Downloads](https://img.shields.io/nuget/dt/JorgeCostaMacia.Quartz.svg)](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/)
+[![Build](https://github.com/JorgeCostaMacia/quartz-dotnet/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/JorgeCostaMacia/quartz-dotnet/actions/workflows/main.yml)
+[![License](https://img.shields.io/github/license/JorgeCostaMacia/quartz-dotnet.svg)](https://github.com/JorgeCostaMacia/quartz-dotnet/blob/main/LICENSE.txt)
+
+---
+
+## Install
+
+```bash
+dotnet add package JorgeCostaMacia.Quartz
+```
+
+## Usage
+
+```csharp
+using JorgeCostaMacia.Quartz.Domain;
+
+// In ANY observer of the execution (a listener, the job itself):
+JobTrace trace = JobTrace.GetOrCreate(context);   // reads the pair, minting + storing it if absent
+
+await bus.Publish(new JobCompletedEvent(..., trace.AggregateId, trace.CorrelationId));
+```
+
+`GetOrCreate` is **idempotent**: the first caller mints the pair (time-ordered UUIDv7s) and puts it on the firing's own `MergedJobDataMap`; every later caller reads the same values. There is no registration-order contract between listeners — the keys and the get-or-create logic live once, here, instead of being re-implemented per listener per service.
+
+For observers **without** an execution context (e.g. a trigger misfire), `JobTrace.Create()` mints a fresh, unshared pair.
+
+### The store configuration
+
+```csharp
+using JorgeCostaMacia.Quartz.Infrastructure;
+
+builder.Services.AddQuartz(quartz => quartz.WithPostgresDefaults("orders", "Scheduler", "quartz"));
+```
+
+`WithPostgresDefaults()` is an extension on `IQuartzBuilder`, **not** an `Add…` facade: your `AddQuartz` call stays in your `Program`, so what the host composes is visible where it happens. It applies the machine name as the instance id, a simple type loader, and the ADO store on Postgres with clustering, job data stored as strings, the System.Text.Json serializer, and the **execution history in the store's own database** — one history for the whole cluster, trimmed by the store itself. How much it keeps is the host's call: Quartz's own bounds apply until the host sets them, and the family's — 15 days, at most 50 000 entries per scheduler — are one more extension, on the options Quartz hands you:
+
+```csharp
+builder.Services
+    .AddQuartz(quartz => quartz.WithPostgresDefaults("orders", "Scheduler", "quartz"))
+    .AddQuartzExecutionHistory(options => options.WithDefaults());
+```
+
+Quartz 4.6 validates three more columns on start (`scheduler_state.quartz_version`, `fired_triggers.interrupt_requested_time`, `triggers.misfire_threshold`): a store created before 4.6 needs Quartz's `database/migrations/4.6` scripts first, and a 4.5 node keeps running on a migrated store. The history tables are part of the schema Quartz validates on start. A store created from Quartz 4.4's `database/tables` scripts already has them; one created by an earlier version needs Quartz's `database/migrations/4.2`, `4.3` and `4.4` scripts first (each one only if the store predates it), and until then the scheduler refuses to start and names the script that is missing.
+
+The three arguments are the only things that differ between hosts: the scheduler's name, the **name** of the connection string (Quartz resolves it from `ConnectionStrings`, and a name that does not resolve fails the scheduler's start with a `SchedulerConfigException` naming it), and the schema holding the store tables — **without** the trailing dot, which is appended for you.
+
+That last one is Quartz's `TablePrefix`, and it **replaces** the `QRTZ_` default rather than adding to it: with `quartz` the store reads `quartz.TRIGGERS` and `quartz.JOB_DETAILS`, not `quartz.QRTZ_TRIGGERS`.
+
+One requirement this package cannot declare: Quartz resolves its ADO provider **by name at runtime**, so your host must reference `Npgsql` itself. This package depends on `Quartz` alone — a consumer that only wants `JobTrace` should not pull in a database driver — and a host that forgets fails at startup with `ArgumentException: Error while reading metadata information for provider 'Npgsql'`.
+
+### Running the scheduler
+
+`AddQuartz` composes the scheduler but does not start it; `AddQuartzHostedService` does. The family's policy for it is one more extension, on the options Quartz hands you:
+
+```csharp
+builder.Services
+    .AddQuartz(quartz => quartz.WithPostgresDefaults("orders", "Scheduler", "quartz"))
+    .AddQuartzHostedService(options => options.WithDefaults());
+```
+
+It starts the scheduler once the host has started — so a job never runs before the rest of the host, the bus among it, is up — and lets running jobs finish when the host stops, so a redeploy does not cut a firing off half way.
+
+## Requirements
+
+The **.NET 10** SDK.
+
+Depends on [Quartz](https://www.nuget.org/packages/Quartz/).
+
+## About
+
+`JorgeCostaMacia.Quartz` is part of **[quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)** — Quartz.NET building blocks for .NET: job-execution trace correlation, the clustered Postgres store and its defaults, and Serilog job and trigger listeners, each package scoped to a single concern.
+
+- **Repository:** [github.com/JorgeCostaMacia/quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)
+- **Issues & requests:** [open an issue](https://github.com/JorgeCostaMacia/quartz-dotnet/issues)
+- **Contributing:** [CONTRIBUTING.md](https://github.com/JorgeCostaMacia/quartz-dotnet/blob/main/CONTRIBUTING.md)
+- **Security:** [report a vulnerability](https://github.com/JorgeCostaMacia/quartz-dotnet/security/advisories/new)
+
+**Author:** Jorge Costa Maciá
+
+- [LinkedIn](https://www.linkedin.com/in/jorge-costa-macia-842817164/)
+- [GitHub](https://github.com/JorgeCostaMacia/)
+- [Bitbucket](https://bitbucket.org/jorgecostamacia/)

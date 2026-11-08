@@ -3,17 +3,17 @@ using Quartz;
 namespace JorgeCostaMacia.Quartz.Infrastructure;
 
 /// <summary>
-/// Extensions for <see cref="IQuartzBuilder"/> that apply the family's Quartz store configuration.
+/// Extensions for <see cref="IQuartzBuilder"/> that apply a clustered Postgres store configuration.
 /// </summary>
 /// <remarks>
 /// Kept as an <see cref="IQuartzBuilder"/> extension (not a hidden <c>Add…</c> facade) so the host's own
 /// <c>AddQuartz</c> call stays visible in its <c>Program</c> while the policy lives here — the same shape
-/// the <c>Http</c> options extensions use.
+/// as http-net's options extensions.
 /// </remarks>
 public static class QuartzBuilderExtensions
 {
     /// <summary>
-    /// Applies the clustered Postgres store every host in the family runs: the machine name as the
+    /// Applies a clustered Postgres store, the same for every host that calls it: the machine name as the
     /// instance id, a simple type loader, the ADO store on Postgres with job data stored as strings, the
     /// System.Text.Json serializer, and the execution history kept in the store's own database.
     /// </summary>
@@ -50,12 +50,12 @@ public static class QuartzBuilderExtensions
     /// The execution history is on: every node of the cluster records its executions and misfires in
     /// the store's <c>EXECUTION_HISTORY</c> and <c>MISFIRE_HISTORY</c> tables, so the cluster has one
     /// history instead of one per process, and the store trims it itself. How much it keeps is the host's
-    /// call, not the store's: Quartz's own bounds apply until the host sets them, and the family's are
-    /// <see cref="ExecutionHistoryOptionsExtensions.WithDefaults"/>, passed to
+    /// call, not the store's: Quartz's own bounds apply until the host sets them, and this package's
+    /// are <see cref="ExecutionHistoryOptionsExtensions.WithDefaults"/>, passed to
     /// <c>AddQuartzExecutionHistory</c>. The tables are part of the schema the scheduler validates on
-    /// start: a store created before Quartz 4.4 needs Quartz's
-    /// <c>database/migrations/4.2</c>, <c>4.3</c> and <c>4.4</c> scripts first, and the start fails naming them if
-    /// they have not been run.
+    /// start: a store created before Quartz 4.4 needs Quartz's <c>database/migrations/4.2</c>, <c>4.3</c> and
+    /// <c>4.4</c> scripts first, and one created before 4.6 its <c>4.6</c> scripts; the start fails naming
+    /// whatever has not been run.
     /// </para>
     /// </remarks>
     public static IQuartzBuilder WithPostgresDefaults(

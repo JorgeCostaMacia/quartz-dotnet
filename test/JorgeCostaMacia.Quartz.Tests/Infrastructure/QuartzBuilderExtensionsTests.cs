@@ -6,11 +6,11 @@ using Quartz;
 namespace JorgeCostaMacia.Quartz.Tests.Infrastructure;
 
 /// <summary>
-/// The clustered Postgres store configuration every host in the family repeats. It is an
+/// The clustered Postgres store configuration, the same for every host that calls it. It is an
 /// <see cref="IQuartzBuilder"/> extension rather than a one-call bootstrap, so the host keeps writing its
 /// own <c>AddQuartz</c> and the composition stays visible where it happens.
 /// </summary>
-public class QuartzBuilderExtensionsTests
+public sealed class QuartzBuilderExtensionsTests
 {
     private static ServiceProvider Provider(
         string instance = "orders",

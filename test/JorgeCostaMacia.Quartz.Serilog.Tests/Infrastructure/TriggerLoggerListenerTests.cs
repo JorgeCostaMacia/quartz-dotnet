@@ -1,5 +1,5 @@
 using JorgeCostaMacia.Quartz.Serilog.Infrastructure;
-using JorgeCostaMacia.Quartz.Serilog.Tests.Fakes;
+using JorgeCostaMacia.Quartz.Serilog.Tests.Support;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Serilog;
@@ -8,7 +8,7 @@ using Serilog.Extensions.Logging;
 
 namespace JorgeCostaMacia.Quartz.Serilog.Tests.Infrastructure;
 
-public class TriggerLoggerListenerTests
+public sealed class TriggerLoggerListenerTests
 {
     private readonly CapturingSink _sink = new CapturingSink();
 
@@ -25,7 +25,7 @@ public class TriggerLoggerListenerTests
     [Fact]
     public async Task TriggerFired_LogsInformation_WithFixedMessageAndContext()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
         await Listener().TriggerFired(context.Trigger, context, TestContext.Current.CancellationToken);
 
@@ -39,7 +39,7 @@ public class TriggerLoggerListenerTests
     [Fact]
     public async Task VetoJobExecution_NeverVetoes_AndLogsInformation()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
         bool vetoed = await Listener().VetoJobExecution(
             context.Trigger,
@@ -55,7 +55,7 @@ public class TriggerLoggerListenerTests
     [Fact]
     public async Task TriggerMisfired_LogsError_WithFreshTrace()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
         await Listener().TriggerMisfired(context.Trigger, context.Scheduler, TestContext.Current.CancellationToken);
 
@@ -64,6 +64,8 @@ public class TriggerLoggerListenerTests
         Assert.Equal(LogEventLevel.Error, logEvent.Level);
         Assert.Equal("\"trigger-1\"", logEvent.Properties["Trigger"].ToString());
         Assert.Equal("\"job-1\"", logEvent.Properties["Job"].ToString());
+        // which scheduler missed it, from the scheduler Quartz passes in
+        Assert.Equal($"\"{context.Scheduler.SchedulerName}\"", logEvent.Properties["Scheduler"].ToString());
         // freshly minted — a misfire has no execution context
         Assert.True(logEvent.Properties.ContainsKey("AggregateId"));
     }
@@ -71,7 +73,7 @@ public class TriggerLoggerListenerTests
     [Fact]
     public async Task TriggerComplete_LogsInformation_WithTheSchedulerInstruction()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
         await Listener().TriggerComplete(
             context.Trigger,
@@ -89,7 +91,7 @@ public class TriggerLoggerListenerTests
     [Fact]
     public async Task TriggerRetriesExhausted_LogsWarning_WithTheRootCause()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
         InvalidOperationException cause = new InvalidOperationException("the broker is down");
 
         await Listener().TriggerRetriesExhausted(
@@ -110,7 +112,8 @@ public class TriggerLoggerListenerTests
     [Fact]
     public async Task TriggerFired_WithTheTimestampsFlipped_LogsThemAsTheyCome()
     {
-        JobExecutionContextFake flipped = (await JobExecutionContextFake.Create()).WithFlippedTimestamps();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
+        JobExecutionContextFake flipped = context.WithFlippedTimestamps();
 
         await Listener().TriggerFired(flipped.Trigger, flipped, TestContext.Current.CancellationToken);
 

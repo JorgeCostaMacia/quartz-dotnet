@@ -32,7 +32,7 @@ services
 ```
 
 - **`JobsLoggerListener`** — `JobToBeExecuted` (Information), `JobExecutionVetoed` (Warning), `JobWasExecuted` (Information, or **Error with the root cause attached** when the job threw).
-- **`TriggerLoggerListener`** — `TriggerFired` / `TriggerComplete` (Information, with the scheduler's resulting instruction), `VetoJobExecution` (Information, never vetoes), `TriggerMisfired` (**Error** — the trigger missed its scheduled time).
+- **`TriggerLoggerListener`** — `TriggerFired` / `TriggerComplete` (Information, with the scheduler's resulting instruction), `VetoJobExecution` (Information, never vetoes), `TriggerMisfired` (**Error** — the trigger missed its scheduled time; it carries the scheduler, trigger, job and data, with no firing times since it never fired), `TriggerRetriesExhausted` (**Warning, with the root cause attached** — a trigger with a retry policy gave up on a failed firing; the failure itself was already logged by `JobWasExecuted`).
 - Every event carries `AggregateId`/`CorrelationId` from [`JobTrace`](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/) — idempotent get-or-create on the firing's own data map, so your own listeners (e.g. event publishers) read the same pair with `JobTrace.GetOrCreate(context)`, in any order.
 
 ## Requirements
@@ -43,7 +43,7 @@ Depends on [JorgeCostaMacia.Quartz](https://www.nuget.org/packages/JorgeCostaMac
 
 ## About
 
-`JorgeCostaMacia.Quartz.Serilog` is part of **[quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)** — Quartz.NET building blocks for .NET: job-execution trace correlation, the clustered Postgres store and its defaults, and Serilog job and trigger listeners, each package scoped to a single concern.
+`JorgeCostaMacia.Quartz.Serilog` is part of **[quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)** — extensions for Quartz.NET: job-execution trace correlation, the clustered Postgres store and its defaults, and Serilog job and trigger listeners, each package scoped to a single concern. An independent project, not affiliated with Quartz.NET or Serilog: these listeners extend Quartz through its listener interfaces and write through Serilog's public API.
 
 - **Repository:** [github.com/JorgeCostaMacia/quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)
 - **Issues & requests:** [open an issue](https://github.com/JorgeCostaMacia/quartz-dotnet/issues)

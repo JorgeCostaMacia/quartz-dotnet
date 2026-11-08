@@ -6,10 +6,10 @@ using Quartz;
 namespace JorgeCostaMacia.Quartz.Tests.Infrastructure;
 
 /// <summary>
-/// The family's history bounds, applied to the options Quartz hands the host through its own
+/// The history bounds, applied to the options Quartz hands the host through its own
 /// <c>AddQuartzExecutionHistory</c>.
 /// </summary>
-public class ExecutionHistoryOptionsExtensionsTests
+public sealed class ExecutionHistoryOptionsExtensionsTests
 {
     // Fifteen days, with a count loose enough that the age is what binds on the busiest host.
     [Fact]

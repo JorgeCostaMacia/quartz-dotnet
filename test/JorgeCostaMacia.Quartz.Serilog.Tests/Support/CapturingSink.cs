@@ -1,7 +1,7 @@
 using Serilog.Core;
 using Serilog.Events;
 
-namespace JorgeCostaMacia.Quartz.Serilog.Tests.Fakes;
+namespace JorgeCostaMacia.Quartz.Serilog.Tests.Support;
 
 /// <summary>Serilog sink double — captures every emitted event for assertion (the in-memory sink package misses events
 /// across execution contexts; a plain capture does not).</summary>

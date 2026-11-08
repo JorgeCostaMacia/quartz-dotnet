@@ -6,10 +6,10 @@ using Quartz;
 namespace JorgeCostaMacia.Quartz.Tests.Infrastructure;
 
 /// <summary>
-/// The family's hosted scheduler policy, applied to the options Quartz hands the host through its own
+/// The hosted scheduler policy, applied to the options Quartz hands the host through its own
 /// <c>AddQuartzHostedService</c>.
 /// </summary>
-public class QuartzHostedServiceOptionsExtensionsTests
+public sealed class QuartzHostedServiceOptionsExtensionsTests
 {
     [Fact]
     public void WithDefaults_StartsAfterTheHostAndLetsRunningJobsFinish()

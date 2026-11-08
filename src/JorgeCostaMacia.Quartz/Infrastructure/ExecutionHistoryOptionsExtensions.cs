@@ -3,7 +3,7 @@ using Quartz;
 namespace JorgeCostaMacia.Quartz.Infrastructure;
 
 /// <summary>
-/// Extensions for <see cref="ExecutionHistoryOptions"/> that apply the family's history bounds.
+/// Extensions for <see cref="ExecutionHistoryOptions"/> that bound the execution history by age and size.
 /// </summary>
 /// <remarks>
 /// An extension on the options Quartz hands the host, not an <c>Add…</c> facade: the host keeps writing
@@ -18,8 +18,8 @@ public static class ExecutionHistoryOptionsExtensions
     /// <param name="options">The history options to configure.</param>
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
     /// <remarks>
-    /// The count is there so that the age is what binds: the busiest host in the family fires some 3 000
-    /// times a day, so 15 days of it fit under the count with room to spare. The store applies both bounds
+    /// The count is there so that the age is what binds: a busy host firing some 3 000 times a day keeps
+    /// 15 days under the count with room to spare. The store applies both bounds
     /// itself, sweeping on its own timer.
     /// </remarks>
     /// <example>

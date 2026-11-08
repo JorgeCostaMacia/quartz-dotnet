@@ -76,7 +76,7 @@ git checkout develop
 
 ## Building & testing
 
-Packages target **.NET 10**.
+Packages target **.NET 10**. The integration tests start a Postgres container, so `dotnet test` needs Docker running.
 
 ```bash
 dotnet build -c Release

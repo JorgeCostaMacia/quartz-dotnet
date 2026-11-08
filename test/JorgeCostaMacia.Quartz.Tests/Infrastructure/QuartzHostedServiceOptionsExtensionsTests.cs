@@ -12,7 +12,7 @@ namespace JorgeCostaMacia.Quartz.Tests.Infrastructure;
 public sealed class QuartzHostedServiceOptionsExtensionsTests
 {
     [Fact]
-    public void WithDefaults_StartsAfterTheHostAndLetsRunningJobsFinish()
+    public void WithDefaults_OnFreshOptions_StartsAfterTheHostAndLetsRunningJobsFinish()
     {
         QuartzHostedServiceOptions options = new QuartzHostedServiceOptions().WithDefaults();
 

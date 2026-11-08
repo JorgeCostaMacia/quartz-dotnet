@@ -25,7 +25,7 @@
 </svg>
 
   <text x="548" y="296" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="96" font-weight="700" fill="#FFFFFF">quartz-dotnet</text>
-  <text x="552" y="352" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="34" fill="#AEB9CC">Quartz.NET building blocks for .NET</text>
+  <text x="552" y="352" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="34" fill="#AEB9CC">Extensions for Quartz.NET</text>
   <text x="552" y="410" font-family="Consolas, ui-monospace, monospace" font-size="32" fill="#E0A22B">JorgeCostaMacia.Quartz.*</text>
   <text x="552" y="470" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="26" fill="#6E7C92">job tracing · Postgres store · execution history · Serilog listeners</text>
 </svg>

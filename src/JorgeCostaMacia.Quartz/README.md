@@ -76,7 +76,7 @@ Depends on [Quartz](https://www.nuget.org/packages/Quartz/).
 
 ## About
 
-`JorgeCostaMacia.Quartz` is part of **[quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)** — Quartz.NET building blocks for .NET: job-execution trace correlation, the clustered Postgres store and its defaults, and Serilog job and trigger listeners, each package scoped to a single concern.
+`JorgeCostaMacia.Quartz` is part of **[quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)** — extensions for Quartz.NET: job-execution trace correlation, the clustered Postgres store and its defaults, and Serilog job and trigger listeners, each package scoped to a single concern. An independent project, not affiliated with Quartz.NET.
 
 - **Repository:** [github.com/JorgeCostaMacia/quartz-dotnet](https://github.com/JorgeCostaMacia/quartz-dotnet)
 - **Issues & requests:** [open an issue](https://github.com/JorgeCostaMacia/quartz-dotnet/issues)

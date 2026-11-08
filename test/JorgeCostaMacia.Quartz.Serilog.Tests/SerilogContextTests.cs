@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JorgeCostaMacia.Quartz.Serilog.Tests;
 
-public class SerilogContextTests
+public sealed class SerilogContextTests
 {
     [Fact]
     public void AddSerilogContext_RegistersBothListenersAsSingletons()

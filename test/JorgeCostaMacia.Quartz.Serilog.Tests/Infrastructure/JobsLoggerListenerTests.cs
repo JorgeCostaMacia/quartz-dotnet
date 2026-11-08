@@ -1,5 +1,5 @@
 using JorgeCostaMacia.Quartz.Serilog.Infrastructure;
-using JorgeCostaMacia.Quartz.Serilog.Tests.Fakes;
+using JorgeCostaMacia.Quartz.Serilog.Tests.Support;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Serilog;
@@ -8,7 +8,7 @@ using Serilog.Extensions.Logging;
 
 namespace JorgeCostaMacia.Quartz.Serilog.Tests.Infrastructure;
 
-public class JobsLoggerListenerTests
+public sealed class JobsLoggerListenerTests
 {
     private readonly CapturingSink _sink = new CapturingSink();
 
@@ -25,7 +25,7 @@ public class JobsLoggerListenerTests
     [Fact]
     public async Task JobToBeExecuted_LogsInformation_WithFixedMessageAndContext()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
         await Listener().JobToBeExecuted(context, TestContext.Current.CancellationToken);
 
@@ -48,7 +48,7 @@ public class JobsLoggerListenerTests
     [Fact]
     public async Task JobExecutionVetoed_LogsWarning()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
         await Listener().JobExecutionVetoed(context, TestContext.Current.CancellationToken);
 
@@ -60,7 +60,7 @@ public class JobsLoggerListenerTests
     [Fact]
     public async Task JobWasExecuted_Clean_LogsInformation()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
 
         await Listener().JobWasExecuted(context, jobException: null, TestContext.Current.CancellationToken);
 
@@ -75,7 +75,7 @@ public class JobsLoggerListenerTests
     [Fact]
     public async Task JobWasExecuted_WithException_LogsError_WithTheRootCause()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
         InvalidOperationException cause = new InvalidOperationException("boom");
 
         await Listener().JobWasExecuted(
@@ -94,7 +94,7 @@ public class JobsLoggerListenerTests
     public async Task Callbacks_ShareTheTraceAcrossTheExecution()
     {
         // whoever observes the same execution reads the same identifiers — no ordering contract.
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
         JobsLoggerListener listener = Listener();
 
         await listener.JobToBeExecuted(context, TestContext.Current.CancellationToken);
@@ -115,7 +115,7 @@ public class JobsLoggerListenerTests
     [Fact]
     public async Task JobWasExecuted_WithAFault_LogsItAsError()
     {
-        JobExecutionContextFake context = await JobExecutionContextFake.Create();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
         JobExecutionException fault = new JobExecutionException(new InvalidOperationException("boom"));
 
         await Listener().JobWasExecuted(context, fault, TestContext.Current.CancellationToken);
@@ -129,7 +129,8 @@ public class JobsLoggerListenerTests
     [Fact]
     public async Task JobToBeExecuted_WithTheTimestampsFlipped_LogsThemAsTheyCome()
     {
-        JobExecutionContextFake flipped = (await JobExecutionContextFake.Create()).WithFlippedTimestamps();
+        JobExecutionContextFake context = await JobExecutionContextFake.Create(TestContext.Current.CancellationToken);
+        JobExecutionContextFake flipped = context.WithFlippedTimestamps();
 
         await Listener().JobToBeExecuted(flipped, TestContext.Current.CancellationToken);
 

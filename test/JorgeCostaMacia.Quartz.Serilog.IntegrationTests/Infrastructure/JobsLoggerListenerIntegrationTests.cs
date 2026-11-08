@@ -3,12 +3,12 @@ using Serilog.Events;
 
 namespace JorgeCostaMacia.Quartz.Serilog.IntegrationTests.Infrastructure;
 
-public class JobsLoggerListenerIntegrationTests
+public sealed class JobsLoggerListenerIntegrationTests
 {
     [Fact]
     public async Task SuccessfulJob_LogsBothCallbacks_WithTheContextQuartzActuallyPopulates()
     {
-        await using SchedulerHarness harness = await SchedulerHarness.StartAsync();
+        await using SchedulerHarness harness = await SchedulerHarness.StartAsync(TestContext.Current.CancellationToken);
 
         await harness.RunOnceAsync<DelayJob>(TestContext.Current.CancellationToken);
 
@@ -47,7 +47,7 @@ public class JobsLoggerListenerIntegrationTests
     [Fact]
     public async Task ThrowingJob_LogsError_WithTheRootCause()
     {
-        await using SchedulerHarness harness = await SchedulerHarness.StartAsync();
+        await using SchedulerHarness harness = await SchedulerHarness.StartAsync(TestContext.Current.CancellationToken);
 
         await harness.RunOnceAsync<ThrowingJob>(TestContext.Current.CancellationToken);
 

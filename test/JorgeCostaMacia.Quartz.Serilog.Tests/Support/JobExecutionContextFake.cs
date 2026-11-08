@@ -1,6 +1,6 @@
 using Quartz;
 
-namespace JorgeCostaMacia.Quartz.Serilog.Tests.Fakes;
+namespace JorgeCostaMacia.Quartz.Serilog.Tests.Support;
 
 /// <summary>
 /// Execution-context double over a real (never started) in-memory scheduler and real job/trigger
@@ -21,14 +21,15 @@ internal sealed class JobExecutionContextFake : IJobExecutionContext
     }
 
     /// <summary>Builds a fake over a fresh in-memory scheduler and an <c>orders</c> job/trigger pair.</summary>
-    public static async Task<JobExecutionContextFake> Create()
+    /// <param name="cancellationToken">The run's token, passed on to the scheduler's build.</param>
+    public static async Task<JobExecutionContextFake> Create(CancellationToken cancellationToken)
     {
         IScheduler scheduler = await QuartzSchedulerBuilder
             .Create(quartz => quartz
                 .ConfigureScheduler(options => options.InstanceName = $"test-{Guid.NewGuid():N}")
                 .UseDefaultThreadPool(1)
                 .UseInMemoryStore())
-            .BuildScheduler();
+            .BuildScheduler(cancellationToken);
 
         IJobDetail job = JobBuilder.Create<NoOpJob>().WithIdentity("job-1", "orders").Build();
         ITrigger trigger = TriggerBuilder.Create().ForJob(job).WithIdentity("trigger-1", "orders").StartNow().Build();

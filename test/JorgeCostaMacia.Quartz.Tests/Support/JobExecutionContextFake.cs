@@ -1,6 +1,6 @@
 using Quartz;
 
-namespace JorgeCostaMacia.Quartz.Tests.Fakes;
+namespace JorgeCostaMacia.Quartz.Tests.Support;
 
 /// <summary>Execution-context double — a real per-firing <see cref="JobDataMap"/> (all <see cref="JobTrace"/> needs),
 /// inert everywhere else.</summary>

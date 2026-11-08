@@ -4,7 +4,7 @@ Extensions for Quartz.NET — job-execution trace correlation, the clustered Pos
 
 ## Layout
 
-- `src/<Package>/` — one package per folder. `test/<Package>.Tests/` — its tests, plus `<Package>.IntegrationTests/` where a suite needs a real dependency: `Quartz` (Postgres for the store configuration — Quartz 4 validates the schema on start, so nothing about it can be asserted from a fake) and `Quartz.Serilog` (a live in-memory scheduler, no container). `assets/` — icons + social preview.
+- `src/<Package>/` — one package per folder. `test/<Package>.Tests/` — its tests (fakes, fixtures and harnesses in `Support/`, the token of the run a required last parameter of every async helper), plus `<Package>.IntegrationTests/` where a suite needs a real dependency: `Quartz` (Postgres for the store configuration — Quartz 4 validates the schema on start, so nothing about it can be asserted from a fake) and `Quartz.Serilog` (a live in-memory scheduler, no container). `assets/` — icons + social preview.
 - **3-tier `Directory.Build.props`**: **root** (repo identity — Authors / Company / Copyright / Repository — + the single lockstep `VersionPrefix`; TFM `net10.0`; ImplicitUsings, Nullable, AnalysisLevel, EnforceCodeStyleInBuild, TreatWarningsAsErrors, the NuGet audit; `IsPackable` false by default) → **`src/`** (`IsPackable` true, package-output: icon / readme / license, SourceLink, symbols, `GenerateDocumentationFile`, pack of LICENSE/COPYRIGHT/icon/README) → **`test/`** (test settings). Each `src` csproj declares **only** `Description` / `PackageTags`; everything else is inherited from the props (don't restate it).
 
 ## Targets & stack

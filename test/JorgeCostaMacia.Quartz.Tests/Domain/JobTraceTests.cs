@@ -1,10 +1,10 @@
 using JorgeCostaMacia.Quartz.Domain;
-using JorgeCostaMacia.Quartz.Tests.Fakes;
+using JorgeCostaMacia.Quartz.Tests.Support;
 using Quartz;
 
 namespace JorgeCostaMacia.Quartz.Tests.Domain;
 
-public class JobTraceTests
+public sealed class JobTraceTests
 {
     [Fact]
     public void Create_MintsAFreshPair_CorrelationDefaultsToTheAggregate()

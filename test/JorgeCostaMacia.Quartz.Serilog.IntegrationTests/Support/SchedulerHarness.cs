@@ -29,7 +29,8 @@ internal sealed class SchedulerHarness : IAsyncDisposable
     public CapturingSink Sink { get; }
 
     /// <summary>Starts a scheduler with both listeners registered over a fresh capturing sink.</summary>
-    public static async Task<SchedulerHarness> StartAsync()
+    /// <param name="cancellationToken">The run's token, passed on to the scheduler's build and start.</param>
+    public static async Task<SchedulerHarness> StartAsync(CancellationToken cancellationToken)
     {
         CapturingSink sink = new CapturingSink();
         ILoggerFactory loggerFactory = new SerilogLoggerFactory(
@@ -40,14 +41,14 @@ internal sealed class SchedulerHarness : IAsyncDisposable
                 .ConfigureScheduler(options => options.InstanceName = $"itest-{Guid.NewGuid():N}")
                 .UseDefaultThreadPool(1)
                 .UseInMemoryStore())
-            .BuildScheduler();
+            .BuildScheduler(cancellationToken);
 
         scheduler.ListenerManager.AddJobListener(
             new JobsLoggerListener(loggerFactory.CreateLogger<JobsLoggerListener>()));
         scheduler.ListenerManager.AddTriggerListener(
             new TriggerLoggerListener(loggerFactory.CreateLogger<TriggerLoggerListener>()));
 
-        await scheduler.Start();
+        await scheduler.Start(cancellationToken);
 
         return new SchedulerHarness(scheduler, sink);
     }

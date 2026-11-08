@@ -3,7 +3,7 @@ using Quartz;
 namespace JorgeCostaMacia.Quartz.Infrastructure;
 
 /// <summary>
-/// Extensions for <see cref="QuartzHostedServiceOptions"/> that apply the family's hosted scheduler policy.
+/// Extensions for <see cref="QuartzHostedServiceOptions"/> that apply a hosted scheduler policy.
 /// </summary>
 /// <remarks>
 /// An extension on the options Quartz hands the host, not an <c>Add…</c> facade: the host keeps writing

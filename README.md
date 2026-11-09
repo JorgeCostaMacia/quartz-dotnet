@@ -10,7 +10,7 @@
 [![Main](https://github.com/JorgeCostaMacia/quartz-dotnet/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/JorgeCostaMacia/quartz-dotnet/actions/workflows/main.yml)
 [![Develop](https://github.com/JorgeCostaMacia/quartz-dotnet/actions/workflows/develop.yml/badge.svg?branch=develop)](https://github.com/JorgeCostaMacia/quartz-dotnet/actions/workflows/develop.yml)
 
-Part of the `JorgeCostaMacia.*` family, alongside [ddd-dotnet](https://github.com/JorgeCostaMacia/ddd-dotnet) (DDD building blocks), [serilog-dotnet](https://github.com/JorgeCostaMacia/serilog-dotnet) (the Serilog baseline), [bus-net](https://github.com/JorgeCostaMacia/bus-net) (messaging) and [http-net](https://github.com/JorgeCostaMacia/http-net) (ASP.NET Core). Moved out of [shared-net](https://github.com/JorgeCostaMacia/shared-net) with the 10.2 versions, keeping the package ids.
+Part of the `JorgeCostaMacia.*` family, alongside [ddd-dotnet](https://github.com/JorgeCostaMacia/ddd-dotnet) (DDD building blocks), [serilog-dotnet](https://github.com/JorgeCostaMacia/serilog-dotnet) (the Serilog baseline), [bus-dotnet](https://github.com/JorgeCostaMacia/bus-dotnet) (messaging) and [http-dotnet](https://github.com/JorgeCostaMacia/http-dotnet) (ASP.NET Core). Moved out of [shared-net](https://github.com/JorgeCostaMacia/shared-net) with the 10.2 versions, keeping the package ids.
 
 An independent project: it builds on Quartz.NET through its own extension points (extension methods on the builders and options Quartz hands the host, and its listener interfaces) and is not affiliated with the Quartz.NET project.
 
@@ -24,6 +24,10 @@ The **.NET 10** SDK.
 | --- | --- |
 | [JorgeCostaMacia.Quartz](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/) | `JobTrace` — idempotent AggregateId/CorrelationId correlation on the Quartz execution context — plus `WithPostgresDefaults()`, a clustered Postgres store configuration, and `WithDefaults()` for its execution history and its hosted scheduler. |
 | [JorgeCostaMacia.Quartz.Serilog](https://www.nuget.org/packages/JorgeCostaMacia.Quartz.Serilog/) | Quartz job/trigger log listeners — fixed low-cardinality messages, everything variable in the log context. |
+
+## Upgrading
+
+What each version asks of you, when it asks anything, is in [CHANGELOG.md](CHANGELOG.md).
 
 ## Contact
 

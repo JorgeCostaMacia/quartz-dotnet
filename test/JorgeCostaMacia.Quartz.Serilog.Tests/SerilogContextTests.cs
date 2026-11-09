@@ -6,7 +6,7 @@ namespace JorgeCostaMacia.Quartz.Serilog.Tests;
 public sealed class SerilogContextTests
 {
     [Fact]
-    public void AddSerilogContext_RegistersBothListenersAsSingletons()
+    public void AddSerilogContext_OnAnEmptyServiceCollection_RegistersBothListenersAsSingletons()
     {
         ServiceCollection services = new ServiceCollection();
 

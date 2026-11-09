@@ -13,7 +13,7 @@ public sealed class ExecutionHistoryOptionsExtensionsTests
 {
     // Fifteen days, with a count loose enough that the age is what binds on the busiest host.
     [Fact]
-    public void WithDefaults_KeepsFifteenDaysAndFiftyThousandEntries()
+    public void WithDefaults_OnFreshOptions_KeepsFifteenDaysAndFiftyThousandEntries()
     {
         ExecutionHistoryOptions options = new ExecutionHistoryOptions().WithDefaults();
 

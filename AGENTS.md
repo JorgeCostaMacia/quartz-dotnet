@@ -63,6 +63,7 @@ A skill listed here but missing on this machine is one command away: `claude plu
 - **`build-dotnet`** — the three-tier `Directory.Build.props`, the single `VersionPrefix`, CPM, the three-day package age, the NuGet audit as a build gate, the library's packing metadata, and the `nuget.config` base.
 - **`testing-dotnet`** (with **`testing`**) — xUnit v3 on Microsoft.Testing.Platform, the test project layout, `TestContext.Current.CancellationToken`, the Testcontainers Postgres fixture and the in-memory scheduler harness.
 - **`gitflow`** — all branch/release work.
+- **`changelog`** — the `CHANGELOG.md` entry a release adds when it asks something of the packages' consumers (a major, a new requirement, a changed default), written with the version bump.
 - **`dotnet`** — C# language server + general .NET development.
 - **`dotnet-msbuild`** — `Directory.Build.props`, project-file quality, CPM.
 - **`dotnet-nuget`** — dependency management.

@@ -25,6 +25,10 @@ The **.NET 10** SDK.
 | [JorgeCostaMacia.Quartz](https://www.nuget.org/packages/JorgeCostaMacia.Quartz/) | `JobTrace` — idempotent AggregateId/CorrelationId correlation on the Quartz execution context — plus `WithPostgresDefaults()`, a clustered Postgres store configuration, and `WithDefaults()` for its execution history and its hosted scheduler. |
 | [JorgeCostaMacia.Quartz.Serilog](https://www.nuget.org/packages/JorgeCostaMacia.Quartz.Serilog/) | Quartz job/trigger log listeners — fixed low-cardinality messages, everything variable in the log context. |
 
+## Upgrading
+
+What each version asks of you, when it asks anything, is in [CHANGELOG.md](CHANGELOG.md).
+
 ## Contact
 
 - [LinkedIn](https://www.linkedin.com/in/jorge-costa-macia-842817164/)
